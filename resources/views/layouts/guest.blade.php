@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative z-10 text-white/40 text-xs">&copy; {{ date('Y') }} Diya Collection. Redefining modern luxury.</div>
+                <div class="relative z-10 text-white/40 text-xs">&copy; {{ date('Y') }} Diya Collection. <a href="https://arjunprasadbhusal.com.np" target="_blank" class="hover:text-daraz-400 transition-colors">Developer</a></div>
             </div>
 
             {{-- Right Panel --}}

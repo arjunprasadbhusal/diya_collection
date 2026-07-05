@@ -55,13 +55,14 @@
       {{-- Contact Form --}}
       <div class="card-daraz p-8">
         <h3 class="text-xl font-bold text-midnight-900 mb-6">Send Us a Message</h3>
-        <form class="space-y-5">
+        <form action="{{ route('contact.store') }}" method="POST" class="space-y-5">
+          @csrf
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input type="text" placeholder="Full Name" class="input-daraz">
-            <input type="email" placeholder="Email Address" class="input-daraz">
+            <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" class="input-daraz @error('name') border-red-500 @enderror">
+            <input type="email" name="email" placeholder="Email Address" value="{{ old('email') }}" class="input-daraz @error('email') border-red-500 @enderror">
           </div>
-          <input type="text" placeholder="Subject" class="input-daraz">
-          <textarea placeholder="Your Message..." rows="5" class="input-daraz resize-none"></textarea>
+          <input type="text" name="subject" placeholder="Subject" value="{{ old('subject') }}" class="input-daraz @error('subject') border-red-500 @enderror">
+          <textarea name="message" placeholder="Your Message..." rows="5" class="input-daraz resize-none @error('message') border-red-500 @enderror">{{ old('message') }}</textarea>
           <button type="submit" class="btn-daraz w-full py-4">
             <i class="fas fa-paper-plane mr-2"></i> Send Message
           </button>

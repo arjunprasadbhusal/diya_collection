@@ -67,9 +67,6 @@
               @if($loop->index < 3)
                 <div class="absolute top-2 left-2 badge-new text-[9px]">New</div>
               @endif
-              <div class="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-daraz-500 hover:text-white shadow">
-                <i class="far fa-heart text-xs"></i>
-              </div>
               <form action="{{ route('cart.add', $product->id) }}" method="POST" class="absolute bottom-0 left-0 right-0">
                 @csrf
                 <button type="submit" class="w-full bg-midnight-900/90 text-white py-2.5 text-[10px] font-bold uppercase tracking-wider translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-daraz-600 backdrop-blur-sm">

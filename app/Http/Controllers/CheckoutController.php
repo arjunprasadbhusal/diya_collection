@@ -21,16 +21,18 @@ class CheckoutController extends Controller
                 ->get();
         } else {
             $sessionCart = session()->get('cart', []);
-            foreach ($sessionCart as $id => $details) {
-                $product = Product::find($id);
+            foreach ($sessionCart as $key => $details) {
+                $productId = explode('_', $key)[0];
+                $product = Product::find($productId);
                 if (!$product) {
                     continue;
                 }
 
                 $cartItems[] = (object) [
-                    'product_id' => $id,
+                    'product_id' => $productId,
                     'product' => $product,
                     'quantity' => $details['quantity'],
+                    'size' => $details['size'] ?? null,
                 ];
             }
         }
@@ -59,16 +61,18 @@ class CheckoutController extends Controller
                 ->get();
         } else {
             $sessionCart = session()->get('cart', []);
-            foreach ($sessionCart as $id => $details) {
-                $product = Product::find($id);
+            foreach ($sessionCart as $key => $details) {
+                $productId = explode('_', $key)[0];
+                $product = Product::find($productId);
                 if (!$product) {
                     continue;
                 }
 
                 $cartItems[] = (object) [
-                    'product_id' => $id,
+                    'product_id' => $productId,
                     'product' => $product,
                     'quantity' => $details['quantity'],
+                    'size' => $details['size'] ?? null,
                 ];
             }
         }
@@ -108,6 +112,7 @@ class CheckoutController extends Controller
                         'name' => $item->product->name,
                         'price' => $item->product->price,
                         'quantity' => $item->quantity,
+                        'size' => $item->size ?? null,
                         'image' => $item->product->image,
                     ];
                 })->values()->all();
@@ -150,6 +155,6 @@ class CheckoutController extends Controller
             return redirect()->route('checkout')->with('error', 'Unable to place the order right now.');
         }
 
-        return redirect()->route('checkout')->with('success', 'Order placed successfully.');
+        return redirect()->route('home')->with('success', 'Order placed successfully! We\'ll notify you once it ships.');
     }
 }

@@ -11,17 +11,11 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         View::composer('*', function ($view) {
@@ -38,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('cartCount', $cartCount);
+
+            $view->with('categories', Category::orderBy('name')->get());
 
             $view->with([
                 'homeCategories' => Category::take(3)->get(),

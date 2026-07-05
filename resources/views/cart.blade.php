@@ -19,13 +19,6 @@
             </a>
         </div>
 
-        @if(session('success'))
-            <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm font-medium rounded-xl flex items-center justify-between animate-slide-down">
-                <span><i class="fas fa-check-circle mr-2 text-green-500"></i> {{ session('success') }}</span>
-                <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700"><i class="fas fa-times"></i></button>
-            </div>
-        @endif
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {{-- Cart Items --}}
             <div class="lg:col-span-2 space-y-4">
@@ -42,6 +35,9 @@
                         <div class="flex-1">
                             <h3 class="text-sm font-semibold text-midnight-900">{{ $item->product->name }}</h3>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $item->product->category->name ?? 'Uncategorized' }}</p>
+                            @if($item->size ?? false)
+                                <span class="inline-block mt-2 px-2.5 py-0.5 bg-midnight-900 text-white text-[10px] font-semibold rounded-md">Size: {{ $item->size }}</span>
+                            @endif
                             <p class="text-base font-bold text-daraz-600 mt-2">${{ number_format($item->product->price * $item->quantity, 2) }}</p>
                             @if($item->quantity > 1)
                                 <p class="text-[10px] text-gray-400">${{ number_format($item->product->price, 2) }} each</p>
@@ -49,7 +45,7 @@
                         </div>
                         <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-between gap-3">
                             {{-- Quantity Controls --}}
-                            <form action="{{ route('cart.update', Auth::check() ? $item->id : $item->product_id) }}" method="POST" class="flex border-2 border-gray-200 rounded-xl overflow-hidden">
+                            <form action="{{ route('cart.update', Auth::check() ? $item->id : $item->cart_key) }}" method="POST" class="flex border-2 border-gray-200 rounded-xl overflow-hidden">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit" name="quantity" value="{{ $item->quantity - 1 }}" 
@@ -59,7 +55,7 @@
                                 <button type="submit" name="quantity" value="{{ $item->quantity + 1 }}" class="px-3 py-1.5 text-sm hover:bg-gray-100 transition-colors text-gray-600 font-medium">+</button>
                             </form>
                             {{-- Remove --}}
-                            <form action="{{ route('cart.remove', Auth::check() ? $item->id : $item->product_id) }}" method="POST">
+                            <form action="{{ route('cart.remove', Auth::check() ? $item->id : $item->cart_key) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-[10px] font-medium text-red-400 hover:text-red-600 transition-colors flex items-center gap-1">

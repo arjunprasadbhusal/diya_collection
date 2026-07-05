@@ -11,13 +11,7 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm font-medium rounded-xl flex items-center gap-3">
-                <i class="fas fa-check-circle text-green-500"></i> {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" x-data="{ expanded: null }">
             <table class="w-full">
                 <thead>
                     <tr class="text-xs font-bold uppercase tracking-widest text-gray-400 border-b border-gray-100">
@@ -39,7 +33,12 @@
                             <p class="text-sm font-semibold text-midnight-900">{{ $order->first_name }} {{ $order->last_name }}</p>
                             <p class="text-xs text-gray-400">{{ $order->email }}</p>
                         </td>
-                        <td class="py-4 text-center hidden md:table-cell text-sm font-medium text-gray-600">{{ $order->items_count }}</td>
+                        <td class="py-4 text-center hidden md:table-cell">
+                            <button @click="expanded = expanded === {{ $order->id }} ? null : {{ $order->id }}" 
+                                    class="text-sm font-medium text-daraz-600 hover:text-daraz-700 underline underline-offset-2">
+                                {{ $order->items_count }} item(s)
+                            </button>
+                        </td>
                         <td class="py-4 text-center text-sm font-bold text-daraz-600">${{ number_format($order->total, 2) }}</td>
                         <td class="py-4 text-center hidden sm:table-cell">
                             <span class="text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg uppercase">{{ $order->payment_method }}</span>
@@ -57,6 +56,36 @@
                                 </select>
                                 <span class="text-[10px] text-gray-400">{{ $order->created_at?->format('M d, Y') }}</span>
                             </form>
+                        </td>
+                    </tr>
+                    <tr x-show="expanded === {{ $order->id }}" x-cloak>
+                        <td colspan="6" class="bg-gray-50 px-4 pb-4">
+                            <div class="space-y-2">
+                                @php $items = is_array($order->items) ? $order->items : (json_decode($order->items, true) ?? []); @endphp
+                                @foreach($items as $item)
+                                <div class="flex items-center gap-3 p-3 bg-white rounded-xl">
+                                    <div class="w-12 h-14 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                                        @php
+                                            $img = $item['image'] ?? null;
+                                            if ($img && !\Str::startsWith($img, ['http://', 'https://'])) {
+                                                $img = asset($img);
+                                            }
+                                        @endphp
+                                        @if($img)
+                                            <img src="{{ $img }}" class="w-full h-full object-cover">
+                                        @endif
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-midnight-900 truncate">{{ $item['name'] ?? 'N/A' }}</p>
+                                        <p class="text-xs text-gray-400">Qty: {{ $item['quantity'] ?? 0 }} × ${{ number_format($item['price'] ?? 0, 2) }}</p>
+                                        @if(!empty($item['size']))
+                                            <span class="inline-block mt-1 px-2 py-0.5 bg-midnight-900 text-white text-[9px] font-semibold rounded">Size: {{ $item['size'] }}</span>
+                                        @endif
+                                    </div>
+                                    <span class="text-sm font-bold text-daraz-600">${{ number_format(($item['quantity'] ?? 0) * ($item['price'] ?? 0), 2) }}</span>
+                                </div>
+                                @endforeach
+                            </div>
                         </td>
                     </tr>
                     @empty

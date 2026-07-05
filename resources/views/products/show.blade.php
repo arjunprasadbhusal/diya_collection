@@ -21,13 +21,6 @@
 
 {{-- Product Detail --}}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  @if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm font-medium rounded-xl flex items-center gap-3 animate-slide-down">
-      <i class="fas fa-check-circle text-green-500"></i>
-      {{ session('success') }}
-    </div>
-  @endif
-
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
     {{-- Image Gallery --}}
     <div class="lg:col-span-5">
@@ -116,14 +109,29 @@
             </div>
           </div>
 
+          {{-- Size Selector --}}
+          <div class="border-t border-gray-100 pt-6" x-data="{ selectedSize: '' }">
+            <span class="text-sm font-semibold text-gray-700 block mb-3">Size:</span>
+            <div class="flex flex-wrap gap-2">
+              <template x-for="size in ['S', 'M', 'L', 'XL', 'XXL']" :key="size">
+                <button type="button" @click="selectedSize = size"
+                        :class="selectedSize === size ? 'bg-midnight-900 text-white border-midnight-900 shadow-md' : 'bg-white text-gray-700 border-gray-200 hover:border-midnight-900 hover:text-midnight-900'"
+                        class="w-12 h-12 rounded-xl border-2 font-semibold text-sm transition-all duration-200">
+                  <span x-text="size"></span>
+                </button>
+              </template>
+              <input type="hidden" name="size" x-model="selectedSize">
+            </div>
+            <p class="text-xs mt-2" x-text="selectedSize ? 'Selected: ' + selectedSize : 'Please select a size'"
+               :class="selectedSize ? 'text-green-600 font-medium' : 'text-gray-400'"></p>
+          </div>
+
           {{-- Action Buttons --}}
           <div class="flex flex-col sm:flex-row gap-3">
             <button type="submit" class="btn-daraz flex-1 py-4 text-base shadow-lg shadow-daraz-500/30">
               <i class="fas fa-shopping-bag mr-2"></i> Add to Cart
             </button>
-            <button type="button" class="btn-daraz-outline flex-1 py-4 text-base">
-              <i class="far fa-heart mr-2"></i> Save to Wishlist
-            </button>
+
           </div>
         </form>
       @else

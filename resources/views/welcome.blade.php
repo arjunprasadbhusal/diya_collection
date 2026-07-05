@@ -47,16 +47,16 @@
           </div>
         </div>
       </div>
-      <div class="hidden lg:flex justify-center animate-float">
-        <div class="relative">
-          <div class="w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-daraz-500/30 to-daraz-700/30 rounded-3xl rotate-6 backdrop-blur-sm border border-white/10"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="text-center">
-              <div class="w-28 h-28 bg-daraz-500 rounded-3xl shadow-2xl mx-auto mb-6 flex items-center justify-center">
-                <i class="fas fa-crown text-4xl text-white"></i>
-              </div>
-              <p class="text-white font-semibold text-xl">Premium Collection</p>
-              <p class="text-daraz-400 text-sm">Up to 40% Off</p>
+      <div class="hidden lg:flex justify-center">
+        <div class="relative w-80 h-80 md:w-96 md:h-96 rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop"
+               alt="Premium Fashion Collection"
+               class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-midnight-900/60 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-semibold border border-white/20">
+              <span class="w-2 h-2 bg-daraz-400 rounded-full"></span>
+              Premium Collection
             </div>
           </div>
         </div>
@@ -158,19 +158,28 @@
         View All <i class="fas fa-arrow-right text-xs"></i>
       </a>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
       @forelse($categories as $category)
-      <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group">
-        <div class="card-daraz-hover p-5 text-center">
-          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-daraz-50 to-daraz-100 flex items-center justify-center group-hover:from-daraz-500 group-hover:to-daraz-600 transition-all duration-300">
-            @if($category->image)
-              <img src="{{ $category->image_url }}" alt="{{ $category->name }}" class="w-10 h-10 object-cover rounded-lg">
-            @else
-              <i class="fas fa-tag text-xl text-daraz-500 group-hover:text-white transition-colors"></i>
-            @endif
+      <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group relative">
+        <div class="aspect-[4/5] rounded-2xl overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-500 bg-gray-100">
+          @if($category->image)
+            <img src="{{ $category->image_url }}" alt="{{ $category->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+          @else
+            <div class="w-full h-full bg-gradient-to-br from-daraz-100 to-daraz-200 flex items-center justify-center">
+              <i class="fas fa-tag text-4xl text-daraz-400/60"></i>
+            </div>
+          @endif
+          <div class="absolute inset-0 bg-gradient-to-t from-midnight-900/85 via-midnight-900/20 to-transparent group-hover:from-daraz-900/90 transition-all duration-500"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-daraz-400"></span>
+              <span class="text-[10px] font-semibold uppercase tracking-wider text-daraz-300">{{ $category->products_count ?? 0 }} Items</span>
+            </div>
+            <h3 class="text-base font-bold text-white group-hover:text-daraz-300 transition-colors">{{ $category->name }}</h3>
           </div>
-          <h3 class="text-sm font-semibold text-gray-800 group-hover:text-daraz-600 transition-colors">{{ $category->name }}</h3>
-          <p class="text-[10px] text-gray-400 mt-1">{{ $category->products_count ?? 0 }} Items</p>
+          <div class="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+            <i class="fas fa-arrow-right text-xs text-white"></i>
+          </div>
         </div>
       </a>
       @empty
@@ -207,9 +216,6 @@
             @if($loop->index < 2)
               <div class="absolute top-3 left-3 badge-new">New</div>
             @endif
-            <div class="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-daraz-500 hover:text-white shadow-lg">
-              <i class="far fa-heart text-xs"></i>
-            </div>
             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="absolute bottom-0 left-0 right-0">
               @csrf
               <button type="submit" class="w-full bg-midnight-900 text-white py-3 text-xs font-bold uppercase tracking-wider translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-daraz-600">

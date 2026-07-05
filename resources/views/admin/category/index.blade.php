@@ -14,12 +14,6 @@
             </a>
         </div>
 
-        @if(session('success'))
-            <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 text-sm font-medium rounded-xl flex items-center gap-3">
-                <i class="fas fa-check-circle text-green-500"></i> {{ session('success') }}
-            </div>
-        @endif
-
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>

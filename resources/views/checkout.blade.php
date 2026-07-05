@@ -28,12 +28,6 @@
             </div>
         </div>
 
-        @if(session('error'))
-            <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-medium rounded-xl flex items-center gap-3">
-                <i class="fas fa-exclamation-circle text-red-500"></i> {{ session('error') }}
-            </div>
-        @endif
-
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
             {{-- Checkout Form --}}
             <div class="lg:col-span-3">
@@ -121,6 +115,9 @@
                             <div class="flex-1 min-w-0">
                                 <h4 class="text-xs font-semibold text-midnight-900 truncate">{{ $item->product->name }}</h4>
                                 <p class="text-[10px] text-gray-400">{{ $item->product->category->name ?? 'Fashion' }}</p>
+                                @if($item->size ?? false)
+                                    <span class="inline-block mt-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-[9px] font-semibold rounded">Size: {{ $item->size }}</span>
+                                @endif
                             </div>
                             <span class="text-xs font-bold text-midnight-900 whitespace-nowrap">${{ number_format($item->product->price * $item->quantity, 2) }}</span>
                         </div>

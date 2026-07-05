@@ -45,9 +45,11 @@
         </a>
 
         {{-- Search Bar --}}
-        <div class="hidden md:flex flex-1 max-w-2xl mx-4">
+        <div class="hidden md:flex flex-1 max-w-2xl mx-4" x-data="searchSuggestions()" @click.away="results = []">
           <form action="{{ route('products.index') }}" method="GET" class="w-full relative group">
-            <input type="text" name="search" placeholder="Search in Diya Collection..."
+            <input type="text" name="search" placeholder="Search in Diya Collection..." autocomplete="off"
+                   x-model="query" @input.debounce.300ms="fetch"
+                   @keydown.escape="results = []" @keydown.enter="$el.closest('form').submit()"
                    class="w-full pl-12 pr-4 h-11 bg-gray-100 border-2 border-transparent rounded-xl text-sm 
                           focus:bg-white focus:border-daraz-500 focus:ring-4 focus:ring-daraz-500/10 
                           transition-all duration-200 outline-none placeholder:text-gray-400">
@@ -55,6 +57,23 @@
             <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-daraz-500 hover:bg-daraz-600 text-white text-sm px-5 py-1.5 rounded-lg transition-colors font-medium">
               Search
             </button>
+            {{-- Suggestions Dropdown --}}
+            <div x-show="results.length > 0" x-cloak
+                 class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+              <template x-for="p in results" :key="p.id">
+                <a :href="'/products/' + p.id" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0">
+                  <div class="w-10 h-12 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                    <img x-show="p.image" :src="p.image" class="w-full h-full object-cover">
+                    <div x-show="!p.image" class="w-full h-full flex items-center justify-center text-gray-300 text-[8px]">N/A</div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-midnight-900 truncate" x-text="p.name"></p>
+                    <p class="text-[10px] text-gray-400" x-text="p.category"></p>
+                  </div>
+                  <span class="text-sm font-bold text-daraz-600 shrink-0" x-text="'$' + parseFloat(p.price).toFixed(2)"></span>
+                </a>
+              </template>
+            </div>
           </form>
         </div>
 
@@ -64,12 +83,6 @@
           <button id="mobileSearchBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900">
             <i class="fas fa-search"></i>
           </button>
-
-          {{-- Wishlist --}}
-          <a href="{{ route('products.index') }}" class="relative w-10 h-10 hidden sm:flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900 group">
-            <i class="far fa-heart text-lg group-hover:text-daraz-500 transition-colors"></i>
-            <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-daraz-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full">0</span>
-          </a>
 
           {{-- Cart --}}
           <a href="{{ route('cart.index') }}" class="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900 group">
@@ -92,6 +105,10 @@
                 <i class="far fa-user-circle text-xl group-hover:text-daraz-500 transition-colors"></i>
                 <span class="text-sm font-medium hidden lg:block max-w-[100px] truncate">{{ Auth::user()->name }}</span>
               </a>
+              <a href="{{ route('orders.my') }}" class="flex items-center gap-2 px-3 h-10 rounded-lg hover:bg-gray-100 transition-colors group">
+                <i class="fas fa-truck text-lg group-hover:text-daraz-500 transition-colors text-gray-500"></i>
+                <span class="text-sm font-medium hidden lg:block text-gray-600 group-hover:text-daraz-500">Orders</span>
+              </a>
               <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-red-50 transition-colors text-gray-400 hover:text-red-500">
@@ -105,11 +122,28 @@
     </div>
 
     {{-- Mobile Search Bar (toggled) --}}
-    <div id="mobileSearch" class="hidden md:hidden px-4 pb-4 animate-slide-down">
+    <div id="mobileSearch" class="hidden md:hidden px-4 pb-4 animate-slide-down" x-data="searchSuggestions()" @click.away="results = []">
       <form action="{{ route('products.index') }}" method="GET" class="relative">
-        <input type="text" name="search" placeholder="Search products..."
+        <input type="text" name="search" placeholder="Search products..." autocomplete="off"
+               x-model="query" @input.debounce.300ms="fetch"
+               @keydown.escape="results = []" @keydown.enter="$el.closest('form').submit()"
                class="w-full pl-11 pr-4 h-11 bg-gray-100 rounded-xl text-sm focus:bg-white focus:border-daraz-500 focus:ring-4 focus:ring-daraz-500/10 transition-all outline-none border-2 border-transparent">
         <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        {{-- Mobile Suggestions --}}
+        <div x-show="results.length > 0" x-cloak
+             class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+          <template x-for="p in results" :key="p.id">
+            <a :href="'/products/' + p.id" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0">
+              <div class="w-8 h-10 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                <img x-show="p.image" :src="p.image" class="w-full h-full object-cover">
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-semibold text-midnight-900 truncate" x-text="p.name"></p>
+                <span class="text-xs font-bold text-daraz-600" x-text="'$' + parseFloat(p.price).toFixed(2)"></span>
+              </div>
+            </a>
+          </template>
+        </div>
       </form>
     </div>
 
@@ -163,9 +197,13 @@
         </a>
       @endguest
       @auth
-        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-daraz-50 text-daraz-600 font-semibold mb-4">
+        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-daraz-50 text-daraz-600 font-semibold mb-2">
           <i class="far fa-user-circle"></i>
           {{ Auth::user()->name }}
+        </a>
+        <a href="{{ route('orders.my') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium mb-4">
+          <i class="fas fa-truck"></i>
+          My Orders
         </a>
       @endauth
       <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
@@ -196,8 +234,26 @@
       </div>
     </div>
     <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100 bg-gray-50">
-      <p class="text-xs text-gray-400 text-center">&copy; 2026 Diya Collection</p>
+      <p class="text-xs text-gray-400 text-center">&copy; 2026 Diya Collection &middot; <a href="https://arjunprasadbhusal.com.np" target="_blank" class="hover:text-daraz-500 transition-colors">Developer</a></p>
     </div>
+  </div>
+
+  {{-- Toast Alerts (top-right) --}}
+  <div class="fixed top-20 right-4 sm:right-6 z-50 w-full max-w-sm space-y-3 pointer-events-none">
+    @if(session('success'))
+      <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+           class="pointer-events-auto bg-midnight-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between text-sm font-medium animate-slide-down border-l-4 border-daraz-500">
+        <span><i class="fas fa-check-circle mr-2 text-daraz-400"></i> {{ session('success') }}</span>
+        <button @click="show = false" class="shrink-0 ml-4 text-gray-400 hover:text-white transition-colors"><i class="fas fa-times"></i></button>
+      </div>
+    @endif
+    @if(session('error'))
+      <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+           class="pointer-events-auto bg-midnight-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between text-sm font-medium animate-slide-down border-l-4 border-red-500">
+        <span><i class="fas fa-exclamation-circle mr-2 text-red-400"></i> {{ session('error') }}</span>
+        <button @click="show = false" class="shrink-0 ml-4 text-gray-400 hover:text-white transition-colors"><i class="fas fa-times"></i></button>
+      </div>
+    @endif
   </div>
 
   {{-- Page Content --}}
@@ -207,25 +263,6 @@
 
   {{-- Footer --}}
   <footer class="bg-midnight-900 text-white">
-    {{-- Newsletter Section --}}
-    <div class="border-b border-white/10">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 class="text-xl font-bold font-display">Subscribe to our newsletter</h3>
-            <p class="text-white/60 text-sm mt-1">Get exclusive offers and new arrivals directly in your inbox.</p>
-          </div>
-          <form class="flex w-full md:w-auto gap-2">
-            <input type="email" placeholder="Enter your email" 
-                   class="flex-1 md:w-72 px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-daraz-500 focus:ring-2 focus:ring-daraz-500/30 transition-all">
-            <button type="submit" class="btn-daraz whitespace-nowrap">
-              Subscribe <i class="fas fa-paper-plane ml-2 text-xs"></i>
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
         {{-- Brand --}}
@@ -319,7 +356,10 @@
     <div class="border-t border-white/10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <p class="text-white/40 text-xs">&copy; {{ date('Y') }} Diya Collection. All rights reserved.</p>
-        <div class="flex gap-6">
+        <div class="flex gap-6 items-center">
+          <a href="https://arjunprasadbhusal.com.np" target="_blank" class="text-white/40 hover:text-daraz-400 transition-colors text-xs">
+            Developed by <span class="font-semibold">Arjun Bhusal</span>
+          </a>
           <a href="#" class="text-white/40 hover:text-white transition-colors text-xs">Privacy</a>
           <a href="#" class="text-white/40 hover:text-white transition-colors text-xs">Terms</a>
           <a href="#" class="text-white/40 hover:text-white transition-colors text-xs">Cookies</a>
@@ -422,6 +462,20 @@
         });
       }
     });
+
+    function searchSuggestions() {
+      return {
+        query: '',
+        results: [],
+        fetch() {
+          if (this.query.length < 2) { this.results = []; return; }
+          fetch('{{ route('api.search.suggestions') }}?q=' + encodeURIComponent(this.query))
+            .then(r => r.json())
+            .then(data => { this.results = data; })
+            .catch(() => { this.results = []; });
+        }
+      }
+    }
 
     @stack('scripts')
   </script>

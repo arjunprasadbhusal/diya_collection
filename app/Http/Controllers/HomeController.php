@@ -77,4 +77,31 @@ class HomeController extends Controller
 
         return view('products.show', compact('product', 'relatedProducts'));
     }
+
+    public function searchSuggestions(Request $request)
+    {
+        $query = $request->get('q');
+
+        if (!$query || strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $products = Product::with('category')
+            ->where('name', 'like', "%{$query}%")
+            ->orWhere('description', 'like', "%{$query}%")
+            ->take(5)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'price' => $product->price,
+                    'image' => $product->image_url,
+                    'category' => $product->category->name ?? '',
+                ];
+            });
+
+        return response()->json($products);
+    }
 }

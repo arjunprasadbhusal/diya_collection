@@ -10,10 +10,12 @@ use App\Http\Controllers\Auth\AdminAuthenticatedSessionController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [HomeController::class, 'shop'])->name('products.index');
 Route::get('/products/{id}', [HomeController::class, 'show'])->name('products.show');
+Route::get('/api/search-suggestions', [HomeController::class, 'searchSuggestions'])->name('api.search.suggestions');
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{productId}', [CartController::class, 'add'])->name('cart.add');
@@ -30,6 +32,7 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
@@ -58,6 +61,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('product', \App\Http\Controllers\ProductController::class);
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
+        Route::get('contact-messages', [ContactController::class, 'adminIndex'])->name('contact.index');
+        Route::patch('contact-messages/{contactMessage}/read', [ContactController::class, 'markRead'])->name('contact.read');
+        Route::delete('contact-messages/{contactMessage}', [ContactController::class, 'destroy'])->name('contact.destroy');
     });
 });
 
@@ -65,6 +71,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/orders', [OrderController::class, 'myOrders'])->name('orders.my');
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 });
 
 require __DIR__.'/auth.php';
