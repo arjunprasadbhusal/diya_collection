@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -55,6 +56,10 @@ class Product extends Model
             }
 
             return asset($image);
+        }
+
+        if (Storage::disk('public')->exists($image)) {
+            return Storage::url($image);
         }
 
         if (!Str::contains($image, '/')) {
