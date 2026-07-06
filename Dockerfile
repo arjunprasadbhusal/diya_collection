@@ -7,11 +7,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     npm \
-    libzip-dev \
-    libsqlite3-dev \
-    sqlite3
+    libpq-dev \
+    libzip-dev
 
-RUN docker-php-ext-install pdo pdo_sqlite zip
+RUN docker-php-ext-install pdo pdo_pgsql zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -24,4 +23,4 @@ RUN npm run build
 
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=$PORT
+CMD sh -c "php artisan config:cache && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
