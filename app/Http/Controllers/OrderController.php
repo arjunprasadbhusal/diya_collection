@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderStatusMail;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -29,6 +31,12 @@ class OrderController extends Controller
 
         if ($validated['status'] === 'cancel') {
             $this->restoreStock($order);
+        }
+
+        try {
+            Mail::to($order->email)->send(new OrderStatusMail($order));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Order status mail failed: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Order status updated.');
@@ -57,6 +65,12 @@ class OrderController extends Controller
             $order->update(['status' => 'cancel']);
             $this->restoreStock($order);
         });
+
+        try {
+            Mail::to($order->email)->send(new OrderStatusMail($order));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Order cancel mail failed: ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Order cancelled successfully.');
     }

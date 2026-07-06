@@ -53,6 +53,11 @@
                           {{ request()->routeIs('admin.contact.*') ? 'bg-daraz-500 text-white shadow-lg shadow-daraz-500/30' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
                     <i class="fas fa-envelope w-5 text-center"></i> Messages
                 </a>
+                <a href="{{ route('admin.users.index') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
+                          {{ request()->routeIs('admin.users.*') ? 'bg-daraz-500 text-white shadow-lg shadow-daraz-500/30' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    <i class="fas fa-users w-5 text-center"></i> Users
+                </a>
 
                 <div class="border-t border-white/10 my-4 pt-4">
                     <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/40 hover:bg-white/10 hover:text-white transition-all">
@@ -161,6 +166,9 @@
             </a>
             <a href="{{ route('admin.contact.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium {{ request()->routeIs('admin.contact.*') ? 'bg-daraz-500 text-white' : 'text-white/60 hover:bg-white/10' }}">
                 <i class="fas fa-envelope w-5 text-center"></i> Messages
+            </a>
+            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium {{ request()->routeIs('admin.users.*') ? 'bg-daraz-500 text-white' : 'text-white/60 hover:bg-white/10' }}">
+                <i class="fas fa-users w-5 text-center"></i> Users
             </a>
             <div class="border-t border-white/10 my-4 pt-4">
                 <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white/40 hover:bg-white/10 hover:text-white">View Store</a>

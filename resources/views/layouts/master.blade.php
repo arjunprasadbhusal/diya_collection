@@ -279,7 +279,7 @@
             <a href="#" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-daraz-500 transition-colors text-white/70 hover:text-white">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="#" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-daraz-500 transition-colors text-white/70 hover:text-white">
+            <a href="https://www.instagram.com/diyaa_clloction/" target="_blank" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-daraz-500 transition-colors text-white/70 hover:text-white">
               <i class="fab fa-instagram"></i>
             </a>
             <a href="#" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-daraz-500 transition-colors text-white/70 hover:text-white">
@@ -330,10 +330,10 @@
         <div>
           <h4 class="text-sm font-bold uppercase tracking-widest text-daraz-400 mb-5">We Accept</h4>
           <div class="flex flex-wrap gap-2 mb-6">
-            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">Visa</div>
-            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">MC</div>
-            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">Amex</div>
-            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">PayPal</div>
+            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">Esewa</div>
+            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">khalti</div>
+            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">Mobile Banking</div>
+            <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">Fonepay</div>
             <div class="px-3 py-2 bg-white/10 rounded-lg text-white/60 text-xs font-medium">COD</div>
           </div>
           <div class="flex items-center gap-3 text-white/40 text-xs">

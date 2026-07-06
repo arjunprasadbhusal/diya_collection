@@ -16,6 +16,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
+use App\Models\User;
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{productId}', [CartController::class, 'add'])->name('cart.add');
@@ -64,6 +65,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('contact-messages', [ContactController::class, 'adminIndex'])->name('contact.index');
         Route::patch('contact-messages/{contactMessage}/read', [ContactController::class, 'markRead'])->name('contact.read');
         Route::delete('contact-messages/{contactMessage}', [ContactController::class, 'destroy'])->name('contact.destroy');
+        Route::get('users', function () {
+            $users = User::withCount('orders')->latest()->paginate(20);
+            return view('admin.user.index', compact('users'));
+        })->name('users.index');
+        Route::delete('users/{user}', function (User $user) {
+            $user->delete();
+            return back()->with('success', 'User deleted successfully.');
+        })->name('users.destroy');
     });
 });
 

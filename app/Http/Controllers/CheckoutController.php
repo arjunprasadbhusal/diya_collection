@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmationMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
@@ -154,6 +156,8 @@ class CheckoutController extends Controller
         if (!$order) {
             return redirect()->route('checkout')->with('error', 'Unable to place the order right now.');
         }
+
+        Mail::to($order->email)->send(new OrderConfirmationMail($order));
 
         return redirect()->route('home')->with('success', 'Order placed successfully! We\'ll notify you once it ships.');
     }
