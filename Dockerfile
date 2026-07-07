@@ -20,6 +20,15 @@ RUN sed -ri -e 's!/var/www/html!/app/public!g' /etc/apache2/sites-available/*.co
     && sed -ri -e 's!/var/www/!/app/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
     && sed -ri -e 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
 
+RUN printf '%s\n' \
+    '<Directory /app/public>' \
+    '    Options Indexes FollowSymLinks' \
+    '    AllowOverride All' \
+    '    Require all granted' \
+    '</Directory>' \
+    > /etc/apache2/conf-available/laravel-public.conf \
+    && a2enconf laravel-public
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY . .
