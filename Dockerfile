@@ -1,9 +1,8 @@
-FROM php:8.4-cli
+FROM php:8.4-apache
 
 WORKDIR /app
 
 ENV PORT=10000
-ENV PHP_CLI_SERVER_WORKERS=4
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -15,6 +14,11 @@ RUN apt-get update && apt-get install -y \
     libzip-dev
 
 RUN docker-php-ext-install pdo pdo_pgsql zip
+RUN a2enmod rewrite
+
+RUN sed -ri -e 's!/var/www/html!/app/public!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!/app/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+    && sed -ri -e 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -22,9 +26,11 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-RUN npm install
+RUN npm ci
 RUN npm run build
+
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD ["sh","-c","php artisan optimize:clear && php artisan migrate --force && php artisan storage:link || true; php artisan config:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+CMD ["sh","-c","php artisan optimize:clear || true; php artisan migrate --force || true; php artisan storage:link || true; php artisan config:cache || true; apache2-foreground"]

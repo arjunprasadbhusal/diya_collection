@@ -14,5 +14,3 @@ services:
         value: https://diya-collection.onrender.com
       - key: CACHE_STORE
         value: file
-      - key: PHP_CLI_SERVER_WORKERS
-        value: "4"
