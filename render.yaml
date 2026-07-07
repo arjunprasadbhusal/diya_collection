@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: diya-collection
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://diya-collection.onrender.com
+      - key: CACHE_STORE
+        value: file
