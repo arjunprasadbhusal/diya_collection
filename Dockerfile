@@ -24,9 +24,4 @@ RUN npm run build
 
 EXPOSE 10000
 
-CMD sh -c "
-php artisan config:cache &&
-php artisan migrate --force &&
-php artisan storage:link || true &&
-php artisan serve --host=0.0.0.0 --port=\${PORT:-10000}
-"
+CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force && php artisan storage:link || true && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
