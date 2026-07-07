@@ -2,6 +2,9 @@ FROM php:8.4-cli
 
 WORKDIR /app
 
+ENV PORT=10000
+ENV PHP_CLI_SERVER_WORKERS=4
+
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -24,4 +27,4 @@ RUN npm run build
 
 EXPOSE 10000
 
-CMD ["sh","-c","php artisan optimize:clear && php artisan migrate --force && php artisan storage:link || true && php artisan config:cache && php artisan serve --host=0.0.0.0 --port=$PORT"]
+CMD ["sh","-c","php artisan optimize:clear && php artisan migrate --force && php artisan storage:link || true; php artisan config:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
