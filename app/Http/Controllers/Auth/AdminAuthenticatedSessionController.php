@@ -11,9 +11,9 @@ use Illuminate\View\View;
 
 class AdminAuthenticatedSessionController extends Controller
 {
-    public function create(): RedirectResponse
+    public function create(): View
     {
-        return redirect()->route('login');
+        return view('auth.login', ['isAdminLogin' => true]);
     }
 
     public function store(AdminLoginRequest $request): RedirectResponse

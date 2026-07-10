@@ -1,17 +1,21 @@
 <x-guest-layout>
-    @section('title', 'Sign In')
+    @php
+        $isAdminLogin = $isAdminLogin ?? false;
+    @endphp
+
+    @section('title', $isAdminLogin ? 'Admin Sign In' : 'Sign In')
 
     <div class="text-center mb-8">
         <div class="w-16 h-16 mx-auto mb-5 bg-gradient-to-br from-daraz-500 to-daraz-700 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-daraz-500/30">
             <i class="fas fa-user"></i>
         </div>
-        <h2 class="text-2xl font-bold text-midnight-900">Welcome Back</h2>
-        <p class="text-sm text-gray-500 mt-1">Sign in to your Diya Collection account</p>
+        <h2 class="text-2xl font-bold text-midnight-900">{{ $isAdminLogin ? 'Admin Login' : 'Welcome Back' }}</h2>
+        <p class="text-sm text-gray-500 mt-1">{{ $isAdminLogin ? 'Sign in to manage Diya Collection' : 'Sign in to your Diya Collection account' }}</p>
     </div>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="space-y-5">
+    <form method="POST" action="{{ $isAdminLogin ? route('admin.login.store') : route('login') }}" class="space-y-5">
         @csrf
 
         <div>
@@ -58,13 +62,15 @@
             <i class="fas fa-sign-in-alt"></i> Sign In
         </button>
 
-        <div class="relative my-6">
-            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-            <div class="relative flex justify-center"><span class="bg-white px-4 text-xs text-gray-400">New to Diya Collection?</span></div>
-        </div>
+        @unless($isAdminLogin)
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                <div class="relative flex justify-center"><span class="bg-white px-4 text-xs text-gray-400">New to Diya Collection?</span></div>
+            </div>
 
-        <a href="{{ route('register') }}" class="w-full h-12 flex items-center justify-center gap-2 border-2 border-gray-200 hover:border-daraz-500 text-gray-700 hover:text-daraz-600 font-semibold text-sm rounded-xl transition-all duration-200 group">
-            <i class="fas fa-user-plus group-hover:text-daraz-500"></i> Create an Account
-        </a>
+            <a href="{{ route('register') }}" class="w-full h-12 flex items-center justify-center gap-2 border-2 border-gray-200 hover:border-daraz-500 text-gray-700 hover:text-daraz-600 font-semibold text-sm rounded-xl transition-all duration-200 group">
+                <i class="fas fa-user-plus group-hover:text-daraz-500"></i> Create an Account
+            </a>
+        @endunless
     </form>
 </x-guest-layout>
