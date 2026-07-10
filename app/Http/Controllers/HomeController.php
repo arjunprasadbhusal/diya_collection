@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -13,8 +14,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = Category::take(3)->get();
-        $featuredProducts = Product::latest()->take(8)->get();
+        $categories = Cache::remember(
+            'home.categories',
+            now()->addMinutes(10),
+            fn () => Category::latest()->take(3)->get()
+        );
+        $featuredProducts = Cache::remember(
+            'home.featured_products',
+            now()->addMinutes(5),
+            fn () => Product::with('category')->latest()->take(8)->get()
+        );
         $highlights = [
             [
                 'title' => 'Express Delivery',
@@ -58,8 +67,12 @@ class HomeController extends Controller
             $query->latest();
         }
 
-        $products = $query->paginate(12);
-        $categories = Category::all();
+        $products = $query->with('category')->paginate(12);
+        $categories = Cache::remember(
+            'shop.categories',
+            now()->addMinutes(10),
+            fn () => Category::orderBy('name')->get()
+        );
 
         return view('products.index', compact('products', 'categories'));
     }
@@ -72,6 +85,7 @@ class HomeController extends Controller
         $product = Product::with('category')->findOrFail($id);
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
+            ->with('category')
             ->take(4)
             ->get();
 

@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Models\Cart;
 use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // Force HTTPS scheme for all generated URLs (fixes mixed-content CSS issue on Render)
         URL::forceScheme('https');
 
-        View::composer('*', function ($view) {
+        View::composer('layouts.master', function ($view) {
             $cartCount = 0;
 
             if (Auth::check()) {
@@ -37,14 +37,11 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('cartCount', $cartCount);
 
-            $view->with('categories', Category::orderBy('name')->get());
-
-            $view->with([
-                'homeCategories' => Category::take(3)->get(),
-                'featuredProducts' => Product::with('category')->latest()->take(4)->get(),
-                'spotlightProduct' => Product::with('category')->latest()->first(),
-                'highlightCategory' => Category::latest()->first(),
-            ]);
+            $view->with('categories', Cache::remember(
+                'layout.categories',
+                now()->addMinutes(10),
+                fn () => Category::orderBy('name')->get()
+            ));
         });
     }
 }

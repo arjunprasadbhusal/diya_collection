@@ -14,3 +14,7 @@ services:
         value: https://diya-collection.onrender.com
       - key: CACHE_STORE
         value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: LOG_LEVEL
+        value: error
