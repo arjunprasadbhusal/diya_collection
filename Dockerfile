@@ -16,13 +16,26 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install pdo pdo_pgsql zip
 RUN a2enmod rewrite
 
-RUN sed -ri -e 's!/var/www/html!/app/public!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!/app/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
-    && sed -ri -e 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
-
-RUN printf '%s\n' \
+RUN sed -ri -e 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf \
+    && printf '%s\n' \
+    '<VirtualHost *:10000>' \
+    '    ServerName diya-collection.onrender.com' \
+    '    DocumentRoot /app/public' \
+    '    DirectoryIndex index.php index.html' \
+    '' \
+    '    <Directory /app/public>' \
+    '        Options FollowSymLinks' \
+    '        AllowOverride All' \
+    '        Require all granted' \
+    '    </Directory>' \
+    '' \
+    '    ErrorLog ${APACHE_LOG_DIR}/error.log' \
+    '    CustomLog ${APACHE_LOG_DIR}/access.log combined' \
+    '</VirtualHost>' \
+    > /etc/apache2/sites-available/000-default.conf \
+    && printf '%s\n' \
     '<Directory /app/public>' \
-    '    Options Indexes FollowSymLinks' \
+    '    Options FollowSymLinks' \
     '    AllowOverride All' \
     '    Require all granted' \
     '</Directory>' \
