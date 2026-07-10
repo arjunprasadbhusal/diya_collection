@@ -37,11 +37,22 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('cartCount', $cartCount);
 
-            $view->with('categories', Cache::remember(
-                'layout.categories',
+            $categoryIds = Cache::remember(
+                'layout.category_ids',
                 now()->addMinutes(10),
-                fn () => Category::orderBy('name')->get()
-            ));
+                fn () => Category::orderBy('name')->pluck('id')->all()
+            );
+
+            $positions = array_flip(array_map('strval', $categoryIds));
+
+            $categories = $categoryIds === []
+                ? collect()
+                : Category::whereIn('id', $categoryIds)
+                    ->get()
+                    ->sortBy(fn (Category $category) => $positions[(string) $category->id] ?? PHP_INT_MAX)
+                    ->values();
+
+            $view->with('categories', $categories);
         });
     }
 }

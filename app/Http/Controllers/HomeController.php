@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
@@ -14,16 +15,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $categories = Cache::remember(
-            'home.categories',
+        $categoryIds = Cache::remember(
+            'home.category_ids',
             now()->addMinutes(10),
-            fn () => Category::latest()->take(3)->get()
+            fn () => Category::latest()->take(3)->pluck('id')->all()
         );
-        $featuredProducts = Cache::remember(
-            'home.featured_products',
+
+        $featuredProductIds = Cache::remember(
+            'home.featured_product_ids',
             now()->addMinutes(5),
-            fn () => Product::with('category')->latest()->take(8)->get()
+            fn () => Product::latest()->take(8)->pluck('id')->all()
         );
+
+        $categories = $this->categoriesByIds($categoryIds);
+        $featuredProducts = $this->productsByIds($featuredProductIds);
+
         $highlights = [
             [
                 'title' => 'Express Delivery',
@@ -68,11 +74,14 @@ class HomeController extends Controller
         }
 
         $products = $query->with('category')->paginate(12);
-        $categories = Cache::remember(
-            'shop.categories',
+
+        $categoryIds = Cache::remember(
+            'shop.category_ids',
             now()->addMinutes(10),
-            fn () => Category::orderBy('name')->get()
+            fn () => Category::orderBy('name')->pluck('id')->all()
         );
+
+        $categories = $this->categoriesByIds($categoryIds);
 
         return view('products.index', compact('products', 'categories'));
     }
@@ -117,5 +126,34 @@ class HomeController extends Controller
             });
 
         return response()->json($products);
+    }
+
+    private function categoriesByIds(array $ids): Collection
+    {
+        if ($ids === []) {
+            return collect();
+        }
+
+        $positions = array_flip(array_map('strval', $ids));
+
+        return Category::whereIn('id', $ids)
+            ->get()
+            ->sortBy(fn (Category $category) => $positions[(string) $category->id] ?? PHP_INT_MAX)
+            ->values();
+    }
+
+    private function productsByIds(array $ids): Collection
+    {
+        if ($ids === []) {
+            return collect();
+        }
+
+        $positions = array_flip(array_map('strval', $ids));
+
+        return Product::with('category')
+            ->whereIn('id', $ids)
+            ->get()
+            ->sortBy(fn (Product $product) => $positions[(string) $product->id] ?? PHP_INT_MAX)
+            ->values();
     }
 }
