@@ -59,6 +59,14 @@ class HomeController extends Controller
     {
         $query = Product::query();
 
+        if ($request->filled('search')) {
+            $search = trim($request->string('search')->toString());
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
         if ($request->has('category')) {
             $query->whereHas('category', function($q) use ($request) {
                 $q->where('slug', $request->category);

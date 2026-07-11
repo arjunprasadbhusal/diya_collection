@@ -38,9 +38,9 @@
           <div class="w-9 h-9 bg-gradient-to-br from-daraz-500 to-daraz-700 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:shadow-lg transition-all">
             D
           </div>
-          <div class="hidden sm:block">
-            <span class="font-display text-xl font-bold text-midnight-900 tracking-tight">Diya</span>
-            <span class="font-display text-xl font-light text-daraz-500">Collection</span>
+          <div class="block whitespace-nowrap">
+            <span class="font-display text-base sm:text-xl font-bold text-midnight-900 tracking-tight">Diya</span>
+            <span class="font-display text-base sm:text-xl font-light text-daraz-500">Collection</span>
           </div>
         </a>
 
@@ -205,6 +205,12 @@
           <i class="fas fa-truck"></i>
           My Orders
         </a>
+        <form action="{{ route('logout') }}" method="POST" class="mb-4">
+          @csrf
+          <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-50 hover:bg-red-100 transition-colors text-red-600 font-semibold">
+            <i class="fas fa-sign-out-alt w-5 text-center"></i> Log Out
+          </button>
+        </form>
       @endauth
       <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
         <i class="fas fa-home w-5 text-center text-daraz-500"></i> Home

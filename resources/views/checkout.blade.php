@@ -59,7 +59,7 @@
                                 <span class="w-8 h-8 bg-daraz-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">2</span>
                                 <h2 class="text-base font-bold text-midnight-900">Shipping Address</h2>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name', $firstName) }}" class="input-daraz @error('first_name') border-red-500 @enderror">
                                 <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name', $lastName) }}" class="input-daraz @error('last_name') border-red-500 @enderror">
                                 <input type="text" name="phone" placeholder="Phone Number" value="{{ old('phone') }}" class="col-span-2 input-daraz @error('phone') border-red-500 @enderror">

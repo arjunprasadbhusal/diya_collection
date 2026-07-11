@@ -25,12 +25,14 @@ class CartController extends Controller
     public function add(Request $request, $productId)
     {
         $product = Product::findOrFail($productId);
-        $quantity = $request->input('quantity', 1);
-        $size = $request->input('size');
+        $quantity = max(1, (int) $request->input('quantity', 1));
+        $size = trim((string) $request->input('size', '')) ?: 'Standard';
 
-        if (!$size) {
-            return redirect()->back()->with('error', 'Please select a size.');
+        if ($product->stock < 1) {
+            return back()->with('error', 'This product is currently out of stock.');
         }
+
+        $quantity = min($quantity, $product->stock);
 
         if (Auth::check()) {
             $cartItem = Cart::where('user_id', Auth::id())
@@ -39,7 +41,8 @@ class CartController extends Controller
                             ->first();
 
             if ($cartItem) {
-                return redirect()->route('products.index')->with('error', 'This item is already in your cart.');
+                $cartItem->update(['quantity' => min($product->stock, $cartItem->quantity + $quantity)]);
+                return redirect()->route('cart.index')->with('success', 'Cart quantity updated.');
             }
 
             Cart::create([
@@ -53,7 +56,9 @@ class CartController extends Controller
             $key = $productId . '_' . $size;
 
             if (isset($cart[$key])) {
-                return redirect()->route('products.index')->with('error', 'This item is already in your cart.');
+                $cart[$key]['quantity'] = min($product->stock, $cart[$key]['quantity'] + $quantity);
+                session()->put('cart', $cart);
+                return redirect()->route('cart.index')->with('success', 'Cart quantity updated.');
             }
 
             $cart[$key] = [
@@ -67,20 +72,23 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
-        return redirect()->route('products.index')->with('success', 'Product added to cart!');
+        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
 
     public function update(Request $request, $id)
     {
-        $quantity = $request->input('quantity');
+        $quantity = max(1, (int) $request->input('quantity', 1));
 
         if (Auth::check()) {
             $cartItem = Cart::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
+            $quantity = min($quantity, $cartItem->product->stock);
             $cartItem->update(['quantity' => $quantity]);
         } else {
             $cart = session()->get('cart');
             if(isset($cart[$id])) {
-                $cart[$id]['quantity'] = $quantity;
+                $productId = (int) explode('_', $id, 2)[0];
+                $stock = (int) Product::whereKey($productId)->value('stock');
+                $cart[$id]['quantity'] = min($quantity, $stock);
                 session()->put('cart', $cart);
             }
         }

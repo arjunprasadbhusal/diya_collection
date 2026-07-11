@@ -57,7 +57,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
       @foreach($products as $product)
         <div class="group card-daraz-hover overflow-hidden animate-fade-in">
-          <a href="{{ route('products.show', $product->id) }}">
+          <a href="{{ route('products.show', $product->id) }}" class="block">
             <div class="relative aspect-[3/4] bg-gray-100 overflow-hidden">
               @if($product->image)
                 <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -67,14 +67,14 @@
               @if($loop->index < 3)
                 <div class="absolute top-2 left-2 badge-new text-[9px]">New</div>
               @endif
-              <form action="{{ route('cart.add', $product->id) }}" method="POST" class="absolute bottom-0 left-0 right-0">
-                @csrf
-                <button type="submit" class="w-full bg-midnight-900/90 text-white py-2.5 text-[10px] font-bold uppercase tracking-wider translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-daraz-600 backdrop-blur-sm">
-                  <i class="fas fa-shopping-bag mr-1.5"></i> Add to Cart
-                </button>
-              </form>
             </div>
           </a>
+          <form action="{{ route('cart.add', $product->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full bg-midnight-900 text-white py-2.5 text-[10px] font-bold uppercase tracking-wider hover:bg-daraz-600 transition-colors">
+              <i class="fas fa-shopping-bag mr-1.5"></i> Add to Cart
+            </button>
+          </form>
           <div class="p-3">
             <span class="text-[9px] font-semibold uppercase tracking-widest text-daraz-600">{{ $product->category->name ?? 'Fashion' }}</span>
             <a href="{{ route('products.show', $product->id) }}">

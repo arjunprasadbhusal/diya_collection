@@ -178,21 +178,21 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       @foreach($relatedProducts as $related)
         <div class="group card-daraz-hover overflow-hidden">
-          <a href="{{ route('products.show', $related->id) }}">
+          <a href="{{ route('products.show', $related->id) }}" class="block">
             <div class="relative aspect-[3/4] bg-gray-100 overflow-hidden">
               @if($related->image)
                 <img src="{{ $related->image_url }}" alt="{{ $related->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
               @else
                 <div class="w-full h-full flex items-center justify-center text-gray-300 text-xs">No Image</div>
               @endif
-              <form action="{{ route('cart.add', $related->id) }}" method="POST" class="absolute bottom-0 left-0 right-0">
-                @csrf
-                <button type="submit" class="w-full bg-midnight-900/90 text-white py-2 text-[10px] font-bold uppercase tracking-wider translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-daraz-600">
-                  <i class="fas fa-shopping-bag mr-1.5"></i> Add
-                </button>
-              </form>
             </div>
           </a>
+          <form action="{{ route('cart.add', $related->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full bg-midnight-900 text-white py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-daraz-600 transition-colors">
+              <i class="fas fa-shopping-bag mr-1.5"></i> Add to Cart
+            </button>
+          </form>
           <div class="p-3">
             <span class="text-[9px] font-semibold uppercase tracking-widest text-daraz-600">{{ $related->category->name }}</span>
             <a href="{{ route('products.show', $related->id) }}">
