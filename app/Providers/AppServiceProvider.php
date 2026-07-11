@@ -19,8 +19,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Force HTTPS scheme for all generated URLs (fixes mixed-content CSS issue on Render)
-        URL::forceScheme('https');
+        // Render uses HTTPS, while local development normally uses http://localhost.
+        // Forcing HTTPS locally makes refreshed image URLs point to https://localhost,
+        // where no HTTPS server is running.
+        if (str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
 
         View::composer('layouts.master', function ($view) {
             $cartCount = 0;
