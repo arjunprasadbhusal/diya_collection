@@ -19,7 +19,7 @@
     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
     <div class="relative z-10 animate-fade-in">
       <span class="inline-block animate-pulse-soft mr-2">🔥</span>
-      Free Shipping on orders over $100 — Use Code: <strong class="tracking-wider">DIYA100</strong>
+      Free Shipping on orders over Rs. 100 — Use Code: <strong class="tracking-wider">DIYA100</strong>
       <a href="{{ route('products.index') }}" class="underline ml-2 font-semibold hover:no-underline">Shop Now</a>
     </div>
   </div>
@@ -342,7 +342,7 @@
           </div>
           <div class="flex items-center gap-3 text-white/40 text-xs mt-2">
             <i class="fas fa-truck text-daraz-400"></i>
-            <span>Free Shipping $100+</span>
+            <span>Free Shipping Rs. 100+</span>
           </div>
           <div class="flex items-center gap-3 text-white/40 text-xs mt-2">
             <i class="fas fa-undo text-daraz-400"></i>

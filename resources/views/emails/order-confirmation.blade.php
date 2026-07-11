@@ -34,8 +34,16 @@
                 @foreach($items as $item)
                     <div style="display: flex; gap: 12px; padding: 10px 0; {{ !$loop->last ? 'border-bottom: 1px solid #eee;' : '' }}">
                         <div style="width: 50px; height: 50px; background: #eee; border-radius: 8px; flex-shrink: 0; overflow: hidden;">
-                            @if(!empty($item['image']))
-                                <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] ?? '' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @php
+                                $img = $item['image'] ?? null;
+                                if ($img && !\Str::startsWith($img, ['http://', 'https://'])) {
+                                    $img = \Illuminate\Support\Facades\Storage::disk('public')->exists($img)
+                                        ? \Illuminate\Support\Facades\Storage::url($img)
+                                        : asset($img);
+                                }
+                            @endphp
+                            @if($img)
+                                <img src="{{ $img }}" alt="{{ $item['name'] ?? '' }}" style="width: 100%; height: 100%; object-fit: cover;">
                             @endif
                         </div>
                         <div style="flex: 1;">

@@ -32,7 +32,7 @@
                     <i class="fas fa-dollar-sign text-green-600"></i>
                 </div>
             </div>
-            <p class="text-3xl font-bold text-midnight-900">${{ number_format($revenueTotal ?? 0, 2) }}</p>
+            <p class="text-3xl font-bold text-midnight-900">Rs. {{ number_format($revenueTotal ?? 0, 2) }}</p>
             <p class="text-xs text-gray-400 mt-1">Total revenue generated</p>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -82,7 +82,7 @@
                             {{ $order->status === 'completed' ? 'bg-green-100 text-green-700' : '' }}">
                             {{ $order->status }}
                         </span>
-                        <p class="text-xs font-bold text-midnight-900 mt-1">${{ number_format($order->total, 2) }}</p>
+                        <p class="text-xs font-bold text-midnight-900 mt-1">Rs. {{ number_format($order->total, 2) }}</p>
                     </div>
                 </div>
                 @empty

@@ -86,9 +86,9 @@
               @endfor
             </div>
             <div class="flex items-center gap-1.5 mt-1.5">
-              <span class="text-sm font-bold text-daraz-600">${{ number_format($product->price, 2) }}</span>
+              <span class="text-sm font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
               @if($loop->index % 3 == 0)
-                <span class="text-[10px] line-through text-gray-400">${{ number_format($product->price * 1.25, 2) }}</span>
+                <span class="text-[10px] line-through text-gray-400">Rs. {{ number_format($product->price * 1.25, 2) }}</span>
               @endif
             </div>
           </div>

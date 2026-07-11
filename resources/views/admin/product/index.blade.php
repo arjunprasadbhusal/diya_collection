@@ -64,7 +64,7 @@
                         </td>
                         <td class="py-4 text-center">
                             <template x-if="!editing">
-                                <span class="text-sm font-bold text-daraz-600">${{ number_format($product->price, 2) }}</span>
+                                <span class="text-sm font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
                             </template>
                             <template x-if="editing">
                                 <input type="number" step="0.01" x-model="price" class="input-daraz text-sm px-3 py-2 w-24 text-center">

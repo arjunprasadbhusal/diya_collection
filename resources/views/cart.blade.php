@@ -38,9 +38,9 @@
                             @if($item->size ?? false)
                                 <span class="inline-block mt-2 px-2.5 py-0.5 bg-midnight-900 text-white text-[10px] font-semibold rounded-md">Size: {{ $item->size }}</span>
                             @endif
-                            <p class="text-base font-bold text-daraz-600 mt-2">${{ number_format($item->product->price * $item->quantity, 2) }}</p>
+                            <p class="text-base font-bold text-daraz-600 mt-2">Rs. {{ number_format($item->product->price * $item->quantity, 2) }}</p>
                             @if($item->quantity > 1)
-                                <p class="text-[10px] text-gray-400">${{ number_format($item->product->price, 2) }} each</p>
+                                <p class="text-[10px] text-gray-400">Rs. {{ number_format($item->product->price, 2) }} each</p>
                             @endif
                         </div>
                         <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-between gap-3">
@@ -100,24 +100,24 @@
                     <div class="space-y-4 mb-6">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Subtotal</span>
-                            <span class="font-semibold text-midnight-900">${{ number_format($subtotal, 2) }}</span>
+                            <span class="font-semibold text-midnight-900">Rs. {{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Shipping</span>
                             @if($shipping == 0)
                                 <span class="text-green-600 font-semibold text-xs">FREE</span>
                             @else
-                                <span class="font-semibold text-midnight-900">${{ number_format($shipping, 2) }}</span>
+                                <span class="font-semibold text-midnight-900">Rs. {{ number_format($shipping, 2) }}</span>
                             @endif
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Tax (8%)</span>
-                            <span class="font-semibold text-midnight-900">${{ number_format($tax, 2) }}</span>
+                            <span class="font-semibold text-midnight-900">Rs. {{ number_format($tax, 2) }}</span>
                         </div>
                         @if($subtotal < 100)
                         <div class="bg-daraz-50 p-3 rounded-xl text-center">
                             <p class="text-xs text-daraz-700 font-medium">
-                                <i class="fas fa-truck mr-1"></i> Add ${{ number_format(100 - $subtotal, 2) }} more for free shipping
+                                <i class="fas fa-truck mr-1"></i> Add Rs. {{ number_format(100 - $subtotal, 2) }} more for free shipping
                             </p>
                             <div class="mt-2 bg-daraz-200 rounded-full h-1.5 overflow-hidden">
                                 <div class="bg-daraz-500 h-full rounded-full" style="width: {{ min(100, ($subtotal / 100) * 100) }}%"></div>
@@ -127,7 +127,7 @@
                         <div class="border-t border-gray-100 pt-4">
                             <div class="flex justify-between">
                                 <span class="text-base font-bold text-midnight-900">Total</span>
-                                <span class="text-xl font-bold text-daraz-600">${{ number_format($grandTotal, 2) }}</span>
+                                <span class="text-xl font-bold text-daraz-600">Rs. {{ number_format($grandTotal, 2) }}</span>
                             </div>
                         </div>
                     </div>

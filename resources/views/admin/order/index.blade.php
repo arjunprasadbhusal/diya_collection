@@ -39,7 +39,7 @@
                                 {{ $order->items_count }} item(s)
                             </button>
                         </td>
-                        <td class="py-4 text-center text-sm font-bold text-daraz-600">${{ number_format($order->total, 2) }}</td>
+                        <td class="py-4 text-center text-sm font-bold text-daraz-600">Rs. {{ number_format($order->total, 2) }}</td>
                         <td class="py-4 text-center hidden sm:table-cell">
                             <span class="text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg uppercase">{{ $order->payment_method }}</span>
                         </td>
@@ -68,7 +68,9 @@
                                         @php
                                             $img = $item['image'] ?? null;
                                             if ($img && !\Str::startsWith($img, ['http://', 'https://'])) {
-                                                $img = asset($img);
+                                                $img = \Illuminate\Support\Facades\Storage::disk('public')->exists($img)
+                                                    ? \Illuminate\Support\Facades\Storage::url($img)
+                                                    : asset($img);
                                             }
                                         @endphp
                                         @if($img)
@@ -77,12 +79,12 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-semibold text-midnight-900 truncate">{{ $item['name'] ?? 'N/A' }}</p>
-                                        <p class="text-xs text-gray-400">Qty: {{ $item['quantity'] ?? 0 }} × ${{ number_format($item['price'] ?? 0, 2) }}</p>
+                                        <p class="text-xs text-gray-400">Qty: {{ $item['quantity'] ?? 0 }} × Rs. {{ number_format($item['price'] ?? 0, 2) }}</p>
                                         @if(!empty($item['size']))
                                             <span class="inline-block mt-1 px-2 py-0.5 bg-midnight-900 text-white text-[9px] font-semibold rounded">Size: {{ $item['size'] }}</span>
                                         @endif
                                     </div>
-                                    <span class="text-sm font-bold text-daraz-600">${{ number_format(($item['quantity'] ?? 0) * ($item['price'] ?? 0), 2) }}</span>
+                                    <span class="text-sm font-bold text-daraz-600">Rs. {{ number_format(($item['quantity'] ?? 0) * ($item['price'] ?? 0), 2) }}</span>
                                 </div>
                                 @endforeach
                             </div>

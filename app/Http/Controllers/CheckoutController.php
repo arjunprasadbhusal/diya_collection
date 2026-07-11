@@ -104,7 +104,7 @@ class CheckoutController extends Controller
                     'shipping_postal_code' => $validated['shipping_postal_code'],
                     'payment_method' => 'cod',
                     'status' => 'pending',
-                    'currency' => 'USD',
+                    'currency' => 'NPR',
                     'subtotal' => $subtotal,
                     'tax' => $tax,
                     'total' => $total,

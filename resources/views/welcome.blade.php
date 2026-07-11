@@ -121,8 +121,8 @@
             </div>
             <h4 class="text-xs font-medium text-gray-700 line-clamp-2 leading-snug group-hover:text-daraz-600 transition-colors">{{ $product->name }}</h4>
             <div class="flex items-center gap-2 mt-1">
-              <span class="text-sm font-bold text-daraz-600">${{ number_format($product->price * 0.7, 2) }}</span>
-              <span class="text-[10px] line-through text-gray-400">${{ number_format($product->price, 2) }}</span>
+              <span class="text-sm font-bold text-daraz-600">Rs. {{ number_format($product->price * 0.7, 2) }}</span>
+              <span class="text-[10px] line-through text-gray-400">Rs. {{ number_format($product->price, 2) }}</span>
             </div>
             <div class="mt-2 bg-daraz-50 rounded-full h-1.5 overflow-hidden">
               <div class="bg-daraz-500 h-full rounded-full" style="width: {{ rand(40, 90) }}%"></div>
@@ -236,9 +236,9 @@
             <span class="text-[10px] text-gray-400 ml-1">({{ rand(10, 99) }})</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-lg font-bold text-daraz-600">${{ number_format($product->price, 2) }}</span>
+            <span class="text-lg font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
             @if($loop->index % 2 == 0)
-              <span class="text-xs line-through text-gray-400">${{ number_format($product->price * 1.3, 2) }}</span>
+              <span class="text-xs line-through text-gray-400">Rs. {{ number_format($product->price * 1.3, 2) }}</span>
               <span class="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">-23%</span>
             @endif
           </div>
@@ -305,7 +305,7 @@
           <i class="fas fa-truck text-2xl text-daraz-600 group-hover:text-white transition-colors"></i>
         </div>
         <h4 class="font-semibold text-gray-800 text-sm">Free Shipping</h4>
-        <p class="text-xs text-gray-500 mt-1">On orders over $100</p>
+        <p class="text-xs text-gray-500 mt-1">On orders over Rs. 100</p>
       </div>
       <div class="text-center p-6 rounded-2xl bg-gray-50 hover:bg-daraz-50 transition-colors group">
         <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-daraz-100 flex items-center justify-center group-hover:bg-daraz-500 transition-colors">

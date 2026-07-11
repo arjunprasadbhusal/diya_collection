@@ -88,7 +88,7 @@
 
                         <button type="submit" class="btn-daraz w-full py-5 text-base shadow-lg shadow-daraz-500/30 {{ count($cartItems) > 0 ? '' : 'opacity-50 cursor-not-allowed' }}" 
                                 {{ count($cartItems) > 0 ? '' : 'disabled' }}>
-                            <i class="fas fa-lock mr-2"></i> Place Order — ${{ number_format($total, 2) }}
+                            <i class="fas fa-lock mr-2"></i> Place Order — Rs. {{ number_format($total, 2) }}
                         </button>
                     </div>
                 </form>
@@ -119,7 +119,7 @@
                                     <span class="inline-block mt-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-[9px] font-semibold rounded">Size: {{ $item->size }}</span>
                                 @endif
                             </div>
-                            <span class="text-xs font-bold text-midnight-900 whitespace-nowrap">${{ number_format($item->product->price * $item->quantity, 2) }}</span>
+                            <span class="text-xs font-bold text-midnight-900 whitespace-nowrap">Rs. {{ number_format($item->product->price * $item->quantity, 2) }}</span>
                         </div>
                         @empty
                         <div class="text-center py-8 text-gray-400 text-sm">Your cart is empty.</div>
@@ -129,7 +129,7 @@
                     <div class="border-t border-gray-100 pt-4 space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Subtotal</span>
-                            <span class="font-semibold">${{ number_format($subtotal, 2) }}</span>
+                            <span class="font-semibold">Rs. {{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Shipping</span>
@@ -137,18 +137,18 @@
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Tax (8%)</span>
-                            <span class="font-semibold">${{ number_format($tax, 2) }}</span>
+                            <span class="font-semibold">Rs. {{ number_format($tax, 2) }}</span>
                         </div>
                         <div class="border-t border-gray-100 pt-3 flex justify-between">
                             <span class="text-base font-bold text-midnight-900">Total</span>
-                            <span class="text-xl font-bold text-daraz-600">${{ number_format($total, 2) }}</span>
+                            <span class="text-xl font-bold text-daraz-600">Rs. {{ number_format($total, 2) }}</span>
                         </div>
                     </div>
 
                     <div class="mt-6 p-4 bg-gray-50 rounded-xl">
                         <div class="flex items-center gap-3 text-sm text-gray-600 mb-2">
                             <i class="fas fa-truck text-daraz-500"></i>
-                            <span>Free shipping on orders over $100</span>
+                            <span>Free shipping on orders over Rs. 100</span>
                         </div>
                         <div class="flex items-center gap-3 text-sm text-gray-600 mb-2">
                             <i class="fas fa-undo text-daraz-500"></i>

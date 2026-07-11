@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -51,6 +52,7 @@ class CategoryController extends Controller
         }
 
         Category::create($validated);
+        $this->forgetCategoryCaches();
 
         return redirect()->route('admin.category.index')->with('success', 'Category created successfully.');
     }
@@ -81,6 +83,7 @@ class CategoryController extends Controller
         }
 
         $category->update($validated);
+        $this->forgetCategoryCaches();
 
         return redirect()->route('admin.category.index')->with('success', 'Category updated successfully.');
     }
@@ -91,6 +94,13 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+        $this->forgetCategoryCaches();
         return redirect()->route('admin.category.index')->with('success', 'Category deleted successfully.');
+    }
+
+    private function forgetCategoryCaches(): void
+    {
+        Cache::forget('home.category_ids');
+        Cache::forget('shop.category_ids');
     }
 }

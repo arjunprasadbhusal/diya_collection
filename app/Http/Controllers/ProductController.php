@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,6 +50,7 @@ class ProductController extends Controller
         }
 
         Product::create($validated);
+        $this->forgetProductCaches();
 
         return redirect()->route('admin.product.index')->with('success', 'Product created successfully.');
     }
@@ -95,6 +97,7 @@ class ProductController extends Controller
         }
 
         $product->update($validated);
+        $this->forgetProductCaches();
 
         return redirect()->route('admin.product.index')->with('success', 'Product updated successfully.');
     }
@@ -105,6 +108,12 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+        $this->forgetProductCaches();
         return redirect()->route('admin.product.index')->with('success', 'Product deleted successfully.');
+    }
+
+    private function forgetProductCaches(): void
+    {
+        Cache::forget('home.featured_product_ids');
     }
 }

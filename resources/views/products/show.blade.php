@@ -61,8 +61,8 @@
 
       {{-- Price --}}
       <div class="flex items-baseline gap-3 mb-6">
-        <span class="text-3xl font-bold text-daraz-600">${{ number_format($product->price, 2) }}</span>
-        <span class="text-lg line-through text-gray-400">${{ number_format($product->price * 1.3, 2) }}</span>
+        <span class="text-3xl font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
+        <span class="text-lg line-through text-gray-400">Rs. {{ number_format($product->price * 1.3, 2) }}</span>
         <span class="badge-sale text-xs">-23%</span>
       </div>
 
@@ -148,7 +148,7 @@
         <div class="grid grid-cols-3 gap-4 text-center">
           <div class="p-3 rounded-xl bg-gray-50">
             <i class="fas fa-truck text-daraz-500 text-lg mb-1 block"></i>
-            <span class="text-[10px] font-medium text-gray-600">Free Shipping $100+</span>
+            <span class="text-[10px] font-medium text-gray-600">Free Shipping Rs. 100+</span>
           </div>
           <div class="p-3 rounded-xl bg-gray-50">
             <i class="fas fa-undo text-daraz-500 text-lg mb-1 block"></i>
@@ -198,7 +198,7 @@
             <a href="{{ route('products.show', $related->id) }}">
               <h4 class="text-xs font-semibold text-gray-800 mt-0.5 line-clamp-2 hover:text-daraz-600 transition-colors">{{ $related->name }}</h4>
             </a>
-            <span class="text-sm font-bold text-daraz-600 mt-1 block">${{ number_format($related->price, 2) }}</span>
+            <span class="text-sm font-bold text-daraz-600 mt-1 block">Rs. {{ number_format($related->price, 2) }}</span>
           </div>
         </div>
       @endforeach

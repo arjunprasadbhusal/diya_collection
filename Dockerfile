@@ -2,7 +2,9 @@ FROM php:8.4-apache
 
 WORKDIR /app
 
-ENV PORT=10000
+ENV PORT=10000 \
+    CACHE_STORE=file \
+    QUEUE_CONNECTION=database
 
 RUN apt-get update && apt-get install -y \
     git \

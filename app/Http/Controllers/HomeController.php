@@ -18,7 +18,7 @@ class HomeController extends Controller
         $categoryIds = Cache::remember(
             'home.category_ids',
             now()->addMinutes(10),
-            fn () => Category::latest()->take(3)->pluck('id')->all()
+            fn () => Category::latest()->take(6)->pluck('id')->all()
         );
 
         $featuredProductIds = Cache::remember(
@@ -33,7 +33,7 @@ class HomeController extends Controller
         $highlights = [
             [
                 'title' => 'Express Delivery',
-                'description' => 'Complimentary on orders over $500',
+                'description' => 'Complimentary on orders over Rs. 500',
             ],
             [
                 'title' => 'Secure Payment',
@@ -137,6 +137,7 @@ class HomeController extends Controller
         $positions = array_flip(array_map('strval', $ids));
 
         return Category::whereIn('id', $ids)
+            ->withCount('products')
             ->get()
             ->sortBy(fn (Category $category) => $positions[(string) $category->id] ?? PHP_INT_MAX)
             ->values();
