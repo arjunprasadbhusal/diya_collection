@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -70,6 +71,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $previousImage = $category->image;
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -83,6 +86,11 @@ class CategoryController extends Controller
         }
 
         $category->update($validated);
+
+        if ($request->hasFile('image') && $previousImage && Storage::disk('public')->exists($previousImage)) {
+            Storage::disk('public')->delete($previousImage);
+        }
+
         $this->forgetCategoryCaches();
 
         return redirect()->route('admin.category.index')->with('success', 'Category updated successfully.');

@@ -33,7 +33,7 @@ class Category extends Model
         $image = ltrim($image, '/');
 
         if (Str::startsWith($image, ['http://', 'https://'])) {
-            return $image;
+            return $this->versionedImageUrl($image);
         }
 
         if (Str::startsWith($image, 'public/')) {
@@ -42,32 +42,39 @@ class Category extends Model
 
         if (Str::startsWith($image, ['uploads/', 'images/', 'storage/'])) {
             if (file_exists(public_path($image))) {
-                return asset($image);
+                return $this->versionedImageUrl(asset($image));
             }
 
             if (Str::startsWith($image, 'images/')) {
                 $fallback = 'uploads/categories/' . basename($image);
                 if (file_exists(public_path($fallback))) {
-                    return asset($fallback);
+                    return $this->versionedImageUrl(asset($fallback));
                 }
             }
 
-            return asset($image);
+            return $this->versionedImageUrl(asset($image));
         }
 
         if (Storage::disk('public')->exists($image)) {
-            return Storage::url($image);
+            return $this->versionedImageUrl(Storage::url($image));
         }
 
         if (!Str::contains($image, '/')) {
             $uploadCandidate = 'uploads/categories/' . $image;
             if (file_exists(public_path($uploadCandidate))) {
-                return asset($uploadCandidate);
+                return $this->versionedImageUrl(asset($uploadCandidate));
             }
 
             $image = 'images/' . $image;
         }
 
-        return asset($image);
+        return $this->versionedImageUrl(asset($image));
+    }
+
+    private function versionedImageUrl(string $url): string
+    {
+        $version = $this->updated_at?->getTimestamp() ?? now()->getTimestamp();
+
+        return $url . (Str::contains($url, '?') ? '&' : '?') . 'v=' . $version;
     }
 }

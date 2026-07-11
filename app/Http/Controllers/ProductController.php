@@ -77,6 +77,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $previousImage = $product->image;
+
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
@@ -89,14 +91,15 @@ class ProductController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
-            if ($product->image && Storage::disk('public')->exists($product->image)) {
-                Storage::disk('public')->delete($product->image);
-            }
-
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
 
         $product->update($validated);
+
+        if ($request->hasFile('image') && $previousImage && Storage::disk('public')->exists($previousImage)) {
+            Storage::disk('public')->delete($previousImage);
+        }
+
         $this->forgetProductCaches();
 
         return redirect()->route('admin.product.index')->with('success', 'Product updated successfully.');
