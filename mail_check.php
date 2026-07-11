@@ -13,13 +13,8 @@ $app->singleton('request', function () {
 $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 $kernel->handle(Illuminate\Http\Request::capture());
 
-echo 'Username: ' . config('mail.mailers.smtp.username') . PHP_EOL;
-echo 'Password: [' . config('mail.mailers.smtp.password') . ']' . PHP_EOL;
-echo 'Length: ' . strlen(config('mail.mailers.smtp.password')) . PHP_EOL;
-echo 'Host: ' . config('mail.mailers.smtp.host') . PHP_EOL;
-echo 'Port: ' . config('mail.mailers.smtp.port') . PHP_EOL;
-echo 'Encryption: ' . config('mail.mailers.smtp.encryption') . PHP_EOL;
-echo 'From: ' . config('mail.from.address') . PHP_EOL;
+echo 'Active Mailer: ' . config('mail.default') . PHP_EOL;
+echo 'From Address: ' . config('mail.from.address') . PHP_EOL;
 echo PHP_EOL;
 
 try {
