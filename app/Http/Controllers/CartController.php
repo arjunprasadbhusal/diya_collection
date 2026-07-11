@@ -16,17 +16,7 @@ class CartController extends Controller
         if (Auth::check()) {
             $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
         } else {
-            $sessionCart = session()->get('cart', []);
-            foreach ($sessionCart as $key => $details) {
-                $productId = explode('_', $key)[0];
-                $cartItems[] = (object)[
-                    'cart_key' => $key,
-                    'product_id' => $productId,
-                    'product' => Product::find($productId),
-                    'quantity' => $details['quantity'],
-                    'size' => $details['size'] ?? null,
-                ];
-            }
+            $cartItems = $this->guestCartItems();
         }
 
         return view('cart', compact('cartItems'));
@@ -112,5 +102,38 @@ class CartController extends Controller
         }
 
         return redirect()->back()->with('success', 'Item removed from cart!');
+    }
+
+    private function guestCartItems(): array
+    {
+        $sessionCart = session()->get('cart', []);
+        $productIds = collect(array_keys($sessionCart))
+            ->map(fn (string $key) => (int) explode('_', $key, 2)[0])
+            ->filter()
+            ->unique()
+            ->values();
+
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        return collect($sessionCart)
+            ->map(function (array $details, string $key) use ($products) {
+                $productId = (int) explode('_', $key, 2)[0];
+                $product = $products->get($productId);
+
+                if (!$product) {
+                    return null;
+                }
+
+                return (object) [
+                    'cart_key' => $key,
+                    'product_id' => $productId,
+                    'product' => $product,
+                    'quantity' => $details['quantity'],
+                    'size' => $details['size'] ?? null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 }

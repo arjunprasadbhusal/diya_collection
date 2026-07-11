@@ -77,4 +77,4 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD ["sh","-c","php artisan optimize:clear || true; php artisan migrate --force || true; php artisan db:seed --force || true; php artisan storage:link || true; php artisan optimize || true; apache2-foreground"]
+CMD ["sh","-c","php artisan optimize:clear || true; php artisan migrate --force || true; php artisan db:seed --force || true; php artisan storage:link || true; php artisan optimize || true; php artisan queue:work database --sleep=1 --tries=3 --timeout=60 & apache2-foreground"]

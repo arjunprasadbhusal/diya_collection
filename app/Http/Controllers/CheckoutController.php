@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
@@ -22,21 +23,7 @@ class CheckoutController extends Controller
                 ->with('product')
                 ->get();
         } else {
-            $sessionCart = session()->get('cart', []);
-            foreach ($sessionCart as $key => $details) {
-                $productId = explode('_', $key)[0];
-                $product = Product::find($productId);
-                if (!$product) {
-                    continue;
-                }
-
-                $cartItems[] = (object) [
-                    'product_id' => $productId,
-                    'product' => $product,
-                    'quantity' => $details['quantity'],
-                    'size' => $details['size'] ?? null,
-                ];
-            }
+            $cartItems = $this->guestCartItems();
         }
 
         return view('checkout', compact('cartItems'));
@@ -62,21 +49,7 @@ class CheckoutController extends Controller
                 ->with('product')
                 ->get();
         } else {
-            $sessionCart = session()->get('cart', []);
-            foreach ($sessionCart as $key => $details) {
-                $productId = explode('_', $key)[0];
-                $product = Product::find($productId);
-                if (!$product) {
-                    continue;
-                }
-
-                $cartItems[] = (object) [
-                    'product_id' => $productId,
-                    'product' => $product,
-                    'quantity' => $details['quantity'],
-                    'size' => $details['size'] ?? null,
-                ];
-            }
+            $cartItems = $this->guestCartItems();
         }
 
         if (count($cartItems) === 0) {
@@ -157,8 +130,47 @@ class CheckoutController extends Controller
             return redirect()->route('checkout')->with('error', 'Unable to place the order right now.');
         }
 
-        Mail::to($order->email)->send(new OrderConfirmationMail($order));
+        try {
+            Mail::to($order->email)->queue(new OrderConfirmationMail($order));
+        } catch (\Throwable $throwable) {
+            Log::error('Order confirmation mail could not be queued.', [
+                'order_id' => $order->id,
+                'exception' => $throwable,
+            ]);
+        }
 
         return redirect()->route('home')->with('success', 'Order placed successfully! We\'ll notify you once it ships.');
+    }
+
+    private function guestCartItems(): array
+    {
+        $sessionCart = session()->get('cart', []);
+        $productIds = collect(array_keys($sessionCart))
+            ->map(fn (string $key) => (int) explode('_', $key, 2)[0])
+            ->filter()
+            ->unique()
+            ->values();
+
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        return collect($sessionCart)
+            ->map(function (array $details, string $key) use ($products) {
+                $productId = (int) explode('_', $key, 2)[0];
+                $product = $products->get($productId);
+
+                if (!$product) {
+                    return null;
+                }
+
+                return (object) [
+                    'product_id' => $productId,
+                    'product' => $product,
+                    'quantity' => $details['quantity'],
+                    'size' => $details['size'] ?? null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 }

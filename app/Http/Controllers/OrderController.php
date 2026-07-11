@@ -34,7 +34,7 @@ class OrderController extends Controller
         }
 
         try {
-            Mail::to($order->email)->send(new OrderStatusMail($order));
+            Mail::to($order->email)->queue(new OrderStatusMail($order));
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Order status mail failed: ' . $e->getMessage());
         }
@@ -67,7 +67,7 @@ class OrderController extends Controller
         });
 
         try {
-            Mail::to($order->email)->send(new OrderStatusMail($order));
+            Mail::to($order->email)->queue(new OrderStatusMail($order));
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Order cancel mail failed: ' . $e->getMessage());
         }

@@ -47,10 +47,7 @@ class CategoryController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/categories'), $imageName);
-            $validated['image'] = 'uploads/categories/' . $imageName;
+            $validated['image'] = $request->file('image')->store('categories', 'public');
         }
 
         Category::create($validated);
@@ -80,10 +77,7 @@ class CategoryController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/categories'), $imageName);
-            $validated['image'] = 'uploads/categories/' . $imageName;
+            $validated['image'] = $request->file('image')->store('categories', 'public');
         }
 
         $category->update($validated);
