@@ -28,6 +28,9 @@ RUN printf '%s\n' \
     'opcache.save_comments=1' \
     'realpath_cache_size=4096K' \
     'realpath_cache_ttl=600' \
+    'upload_max_filesize=50M' \
+    'post_max_size=55M' \
+    'max_execution_time=120' \
     > /usr/local/etc/php/conf.d/production.ini
 
 RUN sed -ri -e 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf \
