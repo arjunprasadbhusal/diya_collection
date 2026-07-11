@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev
 
 RUN docker-php-ext-install pdo pdo_pgsql zip opcache
-RUN a2enmod rewrite expires headers deflate
+RUN a2enmod rewrite expires headers deflate alias
 
 RUN printf '%s\n' \
     'opcache.enable=1' \
@@ -36,10 +36,17 @@ RUN sed -ri -e 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf \
     '    ServerName diya-collection.onrender.com' \
     '    DocumentRoot /app/public' \
     '    DirectoryIndex index.php index.html' \
+    '    Alias /storage /app/storage/app/public' \
     '' \
     '    <Directory /app/public>' \
     '        Options FollowSymLinks' \
     '        AllowOverride All' \
+    '        Require all granted' \
+    '    </Directory>' \
+    '' \
+    '    <Directory /app/storage/app/public>' \
+    '        Options FollowSymLinks' \
+    '        AllowOverride None' \
     '        Require all granted' \
     '    </Directory>' \
     '' \
