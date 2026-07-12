@@ -62,8 +62,8 @@
       {{-- Price --}}
       <div class="flex items-baseline gap-3 mb-6">
         <span class="text-3xl font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
-        <span class="text-lg line-through text-gray-400">Rs. {{ number_format($product->price * 1.3, 2) }}</span>
-        <span class="badge-sale text-xs">-23%</span>
+        <span class="text-lg line-through text-gray-400">Rs. {{ number_format($product->price * 1.25, 2) }}</span>
+        <span class="badge-sale text-xs">-20%</span>
       </div>
 
       {{-- Stock Status --}}

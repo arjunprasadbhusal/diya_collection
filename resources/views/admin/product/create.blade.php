@@ -39,7 +39,7 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="price" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Price ($)</label>
+                            <label for="price" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Price (Rs.)</label>
                             <input type="number" step="0.01" name="price" id="price" required value="{{ old('price') }}"
                                    class="input-daraz @error('price') border-red-500 @enderror" placeholder="0.00">
                             @error('price') <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p> @enderror

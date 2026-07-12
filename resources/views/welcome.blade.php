@@ -110,7 +110,7 @@
                 <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-300 text-xs">No Image</div>
               @endif
               <div class="absolute top-2 left-2 badge-sale text-[9px] px-2 py-0.5">
-                -{{ rand(10, 40) }}%
+                -20%
               </div>
               <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
@@ -121,8 +121,8 @@
             </div>
             <h4 class="text-xs font-medium text-gray-700 line-clamp-2 leading-snug group-hover:text-daraz-600 transition-colors">{{ $product->name }}</h4>
             <div class="flex items-center gap-2 mt-1">
-              <span class="text-sm font-bold text-daraz-600">Rs. {{ number_format($product->price * 0.7, 2) }}</span>
-              <span class="text-[10px] line-through text-gray-400">Rs. {{ number_format($product->price, 2) }}</span>
+              <span class="text-sm font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
+              <span class="text-[10px] line-through text-gray-400">Rs. {{ number_format($product->price * 1.25, 2) }}</span>
             </div>
             <div class="mt-2 bg-daraz-50 rounded-full h-1.5 overflow-hidden">
               <div class="bg-daraz-500 h-full rounded-full" style="width: {{ rand(40, 90) }}%"></div>
@@ -218,12 +218,9 @@
             @endif
           </div>
         </a>
-        <form action="{{ route('cart.add', $product->id) }}" method="POST">
-          @csrf
-          <button type="submit" class="w-full bg-midnight-900 text-white py-3 text-xs font-bold uppercase tracking-wider hover:bg-daraz-600 transition-colors">
-            <i class="fas fa-shopping-bag mr-2"></i> Add to Cart
-          </button>
-        </form>
+        <a href="{{ route('products.show', $product->id) }}" class="block w-full bg-midnight-900 text-white py-3 text-center text-xs font-bold uppercase tracking-wider hover:bg-daraz-600 transition-colors">
+          <i class="fas fa-eye mr-2"></i> Quick View
+        </a>
         <div class="p-4">
           <span class="text-[10px] font-semibold uppercase tracking-widest text-daraz-600">{{ $product->category->name ?? 'Fashion' }}</span>
           <a href="{{ route('products.show', $product->id) }}">
@@ -238,8 +235,8 @@
           <div class="flex items-center gap-2">
             <span class="text-lg font-bold text-daraz-600">Rs. {{ number_format($product->price, 2) }}</span>
             @if($loop->index % 2 == 0)
-              <span class="text-xs line-through text-gray-400">Rs. {{ number_format($product->price * 1.3, 2) }}</span>
-              <span class="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">-23%</span>
+              <span class="text-xs line-through text-gray-400">Rs. {{ number_format($product->price * 1.25, 2) }}</span>
+              <span class="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">-20%</span>
             @endif
           </div>
           <div class="mt-2 flex items-center gap-1 text-[10px]">

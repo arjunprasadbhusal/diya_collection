@@ -29,7 +29,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 lg:h-20 gap-4">
         {{-- Mobile Menu Toggle --}}
-        <button id="mobileMenuBtn" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900">
+        <button type="button" id="mobileMenuBtn" aria-label="Open navigation menu" aria-controls="mobileSidebar" aria-expanded="false" class="lg:hidden relative z-[60] w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900">
           <i class="fas fa-bars text-lg"></i>
         </button>
 
@@ -70,7 +70,7 @@
                     <p class="text-sm font-semibold text-midnight-900 truncate" x-text="p.name"></p>
                     <p class="text-[10px] text-gray-400" x-text="p.category"></p>
                   </div>
-                  <span class="text-sm font-bold text-daraz-600 shrink-0" x-text="'$' + parseFloat(p.price).toFixed(2)"></span>
+                  <span class="text-sm font-bold text-daraz-600 shrink-0" x-text="'Rs. ' + parseFloat(p.price).toFixed(2)"></span>
                 </a>
               </template>
             </div>
@@ -80,7 +80,7 @@
         {{-- Right Icons --}}
         <div class="flex items-center gap-1 sm:gap-2">
           {{-- Search icon for mobile --}}
-          <button id="mobileSearchBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900">
+          <button type="button" id="mobileSearchBtn" aria-label="Toggle search" aria-controls="mobileSearch" aria-expanded="false" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors text-midnight-900">
             <i class="fas fa-search"></i>
           </button>
 
@@ -139,7 +139,7 @@
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-xs font-semibold text-midnight-900 truncate" x-text="p.name"></p>
-                <span class="text-xs font-bold text-daraz-600" x-text="'$' + parseFloat(p.price).toFixed(2)"></span>
+                <span class="text-xs font-bold text-daraz-600" x-text="'Rs. ' + parseFloat(p.price).toFixed(2)"></span>
               </div>
             </a>
           </template>
@@ -184,7 +184,7 @@
           <div class="w-8 h-8 bg-gradient-to-br from-daraz-500 to-daraz-700 rounded-lg flex items-center justify-center text-white font-bold text-xs">D</div>
           <span class="font-display text-lg font-bold">Diya Collection</span>
         </a>
-        <button id="mobileSidebarClose" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+        <button type="button" id="mobileSidebarClose" aria-label="Close navigation menu" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -411,11 +411,13 @@
           sidebar.classList.remove('-translate-x-full');
           overlay.classList.remove('hidden');
           document.body.style.overflow = 'hidden';
+          menuBtn.setAttribute('aria-expanded', 'true');
         };
         const closeSidebar = () => {
           sidebar.classList.add('-translate-x-full');
           overlay.classList.add('hidden');
           document.body.style.overflow = '';
+          menuBtn.setAttribute('aria-expanded', 'false');
         };
         menuBtn.addEventListener('click', openSidebar);
         closeBtn?.addEventListener('click', closeSidebar);
@@ -425,6 +427,7 @@
       if (searchBtn && mobileSearch) {
         searchBtn.addEventListener('click', () => {
           mobileSearch.classList.toggle('hidden');
+          searchBtn.setAttribute('aria-expanded', String(!mobileSearch.classList.contains('hidden')));
         });
       }
 
@@ -483,7 +486,7 @@
       }
     }
 
-    @stack('scripts')
   </script>
+  @stack('scripts')
 </body>
 </html>

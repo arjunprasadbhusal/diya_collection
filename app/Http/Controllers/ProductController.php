@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\CloudinaryService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    protected $cloudinary;
+
+    public function __construct(CloudinaryService $cloudinary)
+    {
+        $this->cloudinary = $cloudinary;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -46,7 +53,9 @@ class ProductController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $this->cloudinary->upload(
+                $request->file('image')->getRealPath()
+            );
         }
 
         Product::create($validated);
@@ -77,8 +86,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $previousImage = $product->image;
-
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
@@ -91,15 +98,12 @@ class ProductController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $this->cloudinary->upload(
+                $request->file('image')->getRealPath()
+            );
         }
 
         $product->update($validated);
-
-        if ($request->hasFile('image') && $previousImage && Storage::disk('public')->exists($previousImage)) {
-            Storage::disk('public')->delete($previousImage);
-        }
-
         $this->forgetProductCaches();
 
         return redirect()->route('admin.product.index')->with('success', 'Product updated successfully.');
