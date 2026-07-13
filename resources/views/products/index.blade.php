@@ -69,12 +69,9 @@
               @endif
             </div>
           </a>
-          <form action="{{ route('cart.add', $product->id) }}" method="POST">
-            @csrf
-            <button type="submit" class="w-full bg-midnight-900 text-white py-2.5 text-[10px] font-bold uppercase tracking-wider hover:bg-daraz-600 transition-colors">
-              <i class="fas fa-shopping-bag mr-1.5"></i> Add to Cart
-            </button>
-          </form>
+          <a href="{{ route('products.show', $product->id) }}" class="block w-full bg-midnight-900 text-white py-2.5 text-center text-[10px] font-bold uppercase tracking-wider hover:bg-daraz-600 transition-colors">
+            <i class="fas fa-eye mr-1.5"></i> Quick View
+          </a>
           <div class="p-3">
             <span class="text-[9px] font-semibold uppercase tracking-widest text-daraz-600">{{ $product->category->name ?? 'Fashion' }}</span>
             <a href="{{ route('products.show', $product->id) }}">
